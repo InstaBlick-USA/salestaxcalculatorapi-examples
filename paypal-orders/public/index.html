@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="PayPal Orders checkout with Sales Tax Calculator API">
+    <title>PayPal Orders example · Sales Tax Calculator API</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="brand">
+        <span class="mark" aria-hidden="true">S</span>
+        <span>Sales Tax Calculator API</span>
+        <span class="provider">PayPal example</span>
+      </header>
+
+      <section class="checkout">
+        <div class="intro">
+          <p class="eyebrow">PayPal Orders</p>
+          <h1>One trusted total, from tax to capture.</h1>
+          <p>Your server owns prices and seller facts, calculates tax, and creates the PayPal order. The browser cannot replace the amount.</p>
+        </div>
+
+        <div class="grid">
+          <form id="details-form" class="card">
+            <div class="product">
+              <div>
+                <p class="label">SaaS starter subscription</p>
+                <p class="muted">One-time first subscription payment</p>
+              </div>
+              <strong>CAD 100.00</strong>
+            </div>
+
+            <input id="product-id" type="hidden" value="saas-starter">
+            <label for="quantity">Quantity</label>
+            <input id="quantity" name="quantity" type="number" min="1" max="10" value="1" required>
+
+            <div class="field-row">
+              <div>
+                <label for="state">Province</label>
+                <input id="state" name="state" autocomplete="address-level1" value="ON" maxlength="2" required>
+              </div>
+              <div>
+                <label for="postal-code">Postal code</label>
+                <input id="postal-code" name="postal-code" autocomplete="postal-code" value="M5V 2T6" maxlength="12" required>
+              </div>
+            </div>
+          </form>
+
+          <aside class="summary card" aria-labelledby="summary-title">
+            <p class="eyebrow">Order summary</p>
+            <h2 id="summary-title">Calculated at PayPal</h2>
+            <dl>
+              <div><dt>Subtotal</dt><dd id="subtotal">—</dd></div>
+              <div><dt>Tax</dt><dd id="tax">—</dd></div>
+              <div class="total"><dt>Total</dt><dd id="total">—</dd></div>
+            </dl>
+            <p id="calculation-reference" class="reference">Tax is calculated when you choose PayPal.</p>
+          </aside>
+        </div>
+
+        <section class="payment card" aria-labelledby="payment-title">
+          <h2 id="payment-title">Pay securely</h2>
+          <paypal-button id="paypal-button" type="pay" hidden></paypal-button>
+          <p id="payment-message" class="message" role="status" aria-live="polite">Loading PayPal sandbox…</p>
+        </section>
+      </section>
+    </main>
+  </body>
+</html>
+

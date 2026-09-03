@@ -1,0 +1,274 @@
+{
+  "info": {
+    "_postman_id": "62d20eb0-9a22-4f31-95a1-dc09e506ea13",
+    "name": "Sales Tax Calculator API",
+    "description": "Official examples for the complete v1 resource lifecycle. Requests use bearer authentication, decimal-string amounts, and idempotency keys.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{apiKey}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.collectionVariables.set('transactionDate', new Date().toISOString().slice(0, 10));"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    { "key": "transactionDate", "value": "" },
+    { "key": "calculationId", "value": "" },
+    { "key": "calculationLineId", "value": "" },
+    { "key": "transactionId", "value": "" },
+    { "key": "adjustmentId", "value": "" },
+    { "key": "batchId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Calculations",
+      "item": [
+        {
+          "name": "Create calculation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Calculation created', () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('calculationId', body.id);",
+                  "pm.collectionVariables.set('calculationLineId', body.lines[0].id);",
+                  "pm.test('Outcome is safe to inspect explicitly', () => pm.expect(body.outcome).to.be.a('string'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "postman:calculation:{{$guid}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reference\": \"postman-order-1001\",\n  \"transaction_date\": \"{{transactionDate}}\",\n  \"currency\": \"CAD\",\n  \"tax_behavior\": \"exclusive\",\n  \"billing_event\": \"subscription_start\",\n  \"seller\": {\n    \"country\": \"CA\",\n    \"channel_role\": \"direct_legal_supplier\",\n    \"registrations\": [\n      {\n        \"country\": \"CA\",\n        \"state\": \"ON\",\n        \"type\": \"gst_hst\",\n        \"effective_from\": \"2026-01-01\"\n      }\n    ]\n  },\n  \"customer\": {\n    \"type\": \"consumer\",\n    \"address\": {\n      \"country\": \"CA\",\n      \"state\": \"ON\",\n      \"postal_code\": \"M5V 2T6\"\n    }\n  },\n  \"lines\": [\n    {\n      \"reference\": \"subscription\",\n      \"amount\": \"100.00\",\n      \"quantity\": \"1\",\n      \"tax_code\": \"saas\"\n    }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/v1/calculations"
+          }
+        },
+        {
+          "name": "Get calculation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('Calculation returned', () => pm.response.to.have.status(200));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/v1/calculations/{{calculationId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transactions and adjustments",
+      "item": [
+        {
+          "name": "Create transaction",
+          "description": "Run after a determinate calculation. review_required and unsupported calculations cannot be finalized.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Transaction created', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('transactionId', pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "postman:transaction:{{$guid}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"calculation_id\": \"{{calculationId}}\",\n  \"reference\": \"postman-order-1001\"\n}"
+            },
+            "url": "{{baseUrl}}/v1/transactions"
+          }
+        },
+        {
+          "name": "Get transaction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('Transaction returned', () => pm.response.to.have.status(200));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/v1/transactions/{{transactionId}}"
+          }
+        },
+        {
+          "name": "Create adjustment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Adjustment created', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('adjustmentId', pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "postman:adjustment:{{$guid}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reference\": \"postman-refund-1001\",\n  \"reason\": \"refund\",\n  \"lines\": [\n    {\n      \"line_id\": \"{{calculationLineId}}\",\n      \"amount\": \"10.00\"\n    }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/v1/transactions/{{transactionId}}/adjustments"
+          }
+        },
+        {
+          "name": "List adjustments",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('Adjustment page returned', () => pm.response.to.have.status(200));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/v1/transactions/{{transactionId}}/adjustments"
+          }
+        },
+        {
+          "name": "Get adjustment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('Adjustment returned', () => pm.response.to.have.status(200));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/v1/transactions/{{transactionId}}/adjustments/{{adjustmentId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Batches",
+      "item": [
+        {
+          "name": "Create calculation batch",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Batch accepted', () => pm.response.to.have.status(202));",
+                  "pm.collectionVariables.set('batchId', pm.response.json().id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "postman:batch:{{$guid}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reference\": \"postman-batch-1001\",\n  \"calculations\": [\n    {\n      \"reference\": \"batch-order-1\",\n      \"transaction_date\": \"{{transactionDate}}\",\n      \"currency\": \"CAD\",\n      \"tax_behavior\": \"exclusive\",\n      \"billing_event\": \"subscription_start\",\n      \"seller\": {\n        \"country\": \"CA\",\n        \"channel_role\": \"direct_legal_supplier\",\n        \"registrations\": [\n          {\n            \"country\": \"CA\",\n            \"state\": \"ON\",\n            \"type\": \"gst_hst\",\n            \"effective_from\": \"2026-01-01\"\n          }\n        ]\n      },\n      \"customer\": {\n        \"type\": \"consumer\",\n        \"address\": {\n          \"country\": \"CA\",\n          \"state\": \"ON\",\n          \"postal_code\": \"M5V 2T6\"\n        }\n      },\n      \"lines\": [\n        {\n          \"reference\": \"subscription\",\n          \"amount\": \"100.00\",\n          \"quantity\": \"1\",\n          \"tax_code\": \"saas\"\n        }\n      ]\n    }\n  ]\n}"
+            },
+            "url": "{{baseUrl}}/v1/calculation-batches"
+          }
+        },
+        {
+          "name": "Get calculation batch",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('Batch returned', () => pm.response.to.have.status(200));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/v1/calculation-batches/{{batchId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Coverage",
+      "item": [
+        {
+          "name": "Check qualified coverage",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test('Coverage returned', () => pm.response.to.have.status(200));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/v1/coverage?country=CA&state=ON&tax_code=saas&transaction_type=sale&customer_type=consumer&date={{transactionDate}}"
+          }
+        }
+      ]
+    }
+  ]
+}
+

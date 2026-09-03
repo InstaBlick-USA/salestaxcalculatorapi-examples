@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="440" viewBox="0 0 1440 440" role="img" aria-labelledby="title description">
+  <title id="title">Sales Tax Calculator API integration examples</title>
+  <desc id="description">Official TypeScript, Python, Stripe, PayPal, and Postman examples for server-side sales tax calculations</desc>
+
+  <defs>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+      <path d="M44 0H0V44" fill="none" stroke="#FFFFFF" stroke-opacity=".035"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#000000" flood-opacity=".32"/>
+    </filter>
+  </defs>
+
+  <rect width="1440" height="440" rx="28" fill="#0B0D0F"/>
+  <rect width="1440" height="440" rx="28" fill="url(#grid)"/>
+  <rect x="0" y="0" width="10" height="440" rx="5" fill="#FF5A36"/>
+
+  <g transform="translate(72 54) scale(.42)" fill="#FF5A36">
+    <polygon points="89,0 170,46 173,100 87,53 58,67 15,40"/>
+    <polygon points="1,52 51,79 52,146 0,116"/>
+    <polygon points="121,89 172,118 172,185 120,156"/>
+    <polygon points="0,136 85,182 113,168 156,197 86,240 0,189"/>
+  </g>
+
+  <text x="170" y="80" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="800" letter-spacing="2.5">SALESTAX</text>
+  <text x="171" y="108" fill="#FF7354" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="750" letter-spacing="4">CALCULATOR API</text>
+
+  <g transform="translate(72 146)">
+    <rect width="162" height="30" rx="15" fill="#FF5A36" fill-opacity=".13" stroke="#FF5A36" stroke-opacity=".45"/>
+    <circle cx="18" cy="15" r="4" fill="#FF5A36"/>
+    <text x="32" y="20" fill="#FF866D" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1.5">OFFICIAL EXAMPLES</text>
+  </g>
+
+  <text x="72" y="244" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="61" font-weight="760" letter-spacing="-2.4">Integration examples</text>
+  <text x="74" y="291" fill="#AEB3B8" font-family="Inter, Arial, sans-serif" font-size="22">TypeScript · Python · Stripe · PayPal · Postman</text>
+
+  <g transform="translate(72 338)" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2">
+    <rect width="126" height="34" rx="8" fill="#171A1E" stroke="#30343A"/>
+    <text x="18" y="22" fill="#D9DCDF">SERVER-SIDE</text>
+    <rect x="138" width="126" height="34" rx="8" fill="#171A1E" stroke="#30343A"/>
+    <text x="156" y="22" fill="#D9DCDF">IDEMPOTENT</text>
+    <rect x="276" width="122" height="34" rx="8" fill="#171A1E" stroke="#30343A"/>
+    <text x="294" y="22" fill="#D9DCDF">FAIL-CLOSED</text>
+  </g>
+
+  <g transform="translate(854 54)" filter="url(#shadow)">
+    <rect width="514" height="332" rx="18" fill="#121519" stroke="#30343A"/>
+    <path d="M0 52H514" stroke="#30343A"/>
+    <circle cx="26" cy="26" r="5" fill="#FF5A36"/>
+    <circle cx="46" cy="26" r="5" fill="#52575E"/>
+    <circle cx="66" cy="26" r="5" fill="#52575E"/>
+    <text x="96" y="31" fill="#8F959C" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="13">checkout.ts</text>
+
+    <text x="28" y="92" fill="#FF866D" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="15" font-weight="700">POST</text>
+    <text x="78" y="92" fill="#FFFFFF" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="15">/v1/calculations</text>
+    <text x="28" y="132" fill="#737980" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="14">Authorization</text>
+    <text x="164" y="132" fill="#C7CBD0" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="14">Bearer stca_••••••••</text>
+    <text x="28" y="162" fill="#737980" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="14">Idempotency-Key</text>
+    <text x="164" y="162" fill="#C7CBD0" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="14">checkout:order-1001</text>
+
+    <rect x="28" y="196" width="458" height="1" fill="#282C31"/>
+    <text x="28" y="234" fill="#737980" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="14">outcome</text>
+    <text x="126" y="234" fill="#67D391" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="14">"calculated"</text>
+    <text x="28" y="266" fill="#737980" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="14">tax</text>
+    <text x="126" y="266" fill="#FFFFFF" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="14">"13.00"</text>
+    <text x="28" y="298" fill="#737980" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="14">total</text>
+    <text x="126" y="298" fill="#FFFFFF" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="14">"113.00"</text>
+    <rect x="426" y="282" width="60" height="26" rx="13" fill="#173824"/>
+    <circle cx="444" cy="295" r="4" fill="#67D391"/>
+    <text x="455" y="300" fill="#91E7B1" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700">201</text>
+  </g>
+</svg>

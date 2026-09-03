@@ -1,0 +1,22 @@
+{
+  "name": "salestaxcalculatorapi-examples",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Official integration examples for Sales Tax Calculator API.",
+  "workspaces": [
+    "typescript/quickstart",
+    "stripe-custom-checkout",
+    "paypal-orders"
+  ],
+  "scripts": {
+    "check": "npm run typecheck && npm test && npm run validate",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm test --workspaces --if-present",
+    "validate": "node scripts/validate-repository.mjs"
+  },
+  "engines": {
+    "node": ">=20.11"
+  },
+  "license": "MIT"
+}
+

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Stripe custom checkout with Sales Tax Calculator API">
+    <title>Stripe checkout example · Sales Tax Calculator API</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="https://js.stripe.com/clover/stripe.js"></script>
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="brand">
+        <span class="mark" aria-hidden="true">S</span>
+        <span>Sales Tax Calculator API</span>
+        <span class="provider">Stripe example</span>
+      </header>
+
+      <section class="checkout">
+        <div class="intro">
+          <p class="eyebrow">Custom checkout</p>
+          <h1>Calculate the right total before payment.</h1>
+          <p>Trusted catalog data stays on the server. The checkout continues only after the tax API returns a determinate outcome.</p>
+        </div>
+
+        <div class="grid">
+          <form id="details-form" class="card">
+            <div class="product">
+              <div>
+                <p class="label">SaaS starter subscription</p>
+                <p class="muted">One-time first subscription payment</p>
+              </div>
+              <strong>CAD 100.00</strong>
+            </div>
+
+            <input id="product-id" type="hidden" value="saas-starter">
+            <label for="quantity">Quantity</label>
+            <input id="quantity" name="quantity" type="number" min="1" max="10" value="1" required>
+
+            <div class="field-row">
+              <div>
+                <label for="state">Province</label>
+                <input id="state" name="state" autocomplete="address-level1" value="ON" maxlength="2" required>
+              </div>
+              <div>
+                <label for="postal-code">Postal code</label>
+                <input id="postal-code" name="postal-code" autocomplete="postal-code" value="M5V 2T6" maxlength="12" required>
+              </div>
+            </div>
+
+            <button id="calculate-button" type="submit">Calculate tax & continue</button>
+            <p id="details-message" class="message" role="status" aria-live="polite"></p>
+          </form>
+
+          <aside class="summary card" aria-labelledby="summary-title">
+            <p class="eyebrow">Order summary</p>
+            <h2 id="summary-title">Your total</h2>
+            <dl>
+              <div><dt>Subtotal</dt><dd id="subtotal">—</dd></div>
+              <div><dt>Tax</dt><dd id="tax">—</dd></div>
+              <div class="total"><dt>Total</dt><dd id="total">—</dd></div>
+            </dl>
+            <p id="calculation-reference" class="reference">Tax is calculated when you continue.</p>
+          </aside>
+        </div>
+
+        <form id="payment-form" class="payment card" hidden>
+          <div id="payment-element"></div>
+          <button id="pay-button" type="submit">Pay securely</button>
+          <p id="payment-message" class="message" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
+
