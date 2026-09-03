@@ -9,14 +9,12 @@
     "paypal-orders"
   ],
   "scripts": {
-    "check": "npm run typecheck && npm test && npm run validate",
+    "check": "npm run typecheck && npm test",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "test": "npm test --workspaces --if-present",
-    "validate": "node scripts/validate-repository.mjs"
+    "test": "npm test --workspaces --if-present"
   },
   "engines": {
     "node": ">=20.11"
   },
   "license": "MIT"
 }
-

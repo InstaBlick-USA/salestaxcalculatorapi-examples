@@ -1,120 +1,93 @@
 <p align="center">
-  <img src="./assets/readme-header.svg" alt="Sales Tax Calculator API integration examples" width="100%">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/salestaxcalculatorapi-logo-reversed.svg">
+    <img src="./assets/salestaxcalculatorapi-logo.svg" alt="Sales Tax Calculator API" width="520">
+  </picture>
+</p>
+
+<h1 align="center">Integration examples</h1>
+
+<p align="center">
+  Working server-side examples for adding sales tax to checkout and order workflows.
 </p>
 
 <p align="center">
-  Production-minded examples for adding sales tax calculations to real checkout and order flows.
+  <a href="https://salestaxcalculatorapi.com/docs">Documentation</a> ·
+  <a href="https://salestaxcalculatorapi.com/openapi.json">API reference</a> ·
+  <a href="https://salestaxcalculatorapi.com/login?mode=signup&redirect=%2Fdashboard%2Fapi-keys">Get an API key</a>
 </p>
 
-<p align="center">
-  <a href="https://github.com/InstaBlick/salestaxcalculatorapi-examples/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/InstaBlick/salestaxcalculatorapi-examples/ci.yml?branch=main&style=flat-square&label=build"></a>
-  <a href="./LICENSE"><img alt="MIT License" src="https://img.shields.io/badge/license-MIT-0B0D0F?style=flat-square"></a>
-  <img alt="Node.js 20 or newer" src="https://img.shields.io/badge/Node.js-20%2B-339933?style=flat-square&logo=nodedotjs&logoColor=white">
-  <img alt="Python 3.11 or newer" src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat-square&logo=python&logoColor=white">
-</p>
+## Examples
 
----
+| Example | What it demonstrates |
+| --- | --- |
+| [TypeScript quickstart](./typescript/quickstart) | Create a calculation with native `fetch` and handle each outcome |
+| [Python quickstart](./python/quickstart) | Call the API from a small Python application |
+| [Stripe custom checkout](./stripe-custom-checkout) | Calculate tax before creating a Stripe Payment Intent |
+| [PayPal Orders](./paypal-orders) | Calculate tax before creating a PayPal order |
+| [Postman collection](./postman) | Explore the complete v1 resource lifecycle without writing code |
 
-## Pick your starting point
+This repository does not add another SDK. Each example calls the API directly, so
+you can inspect the request, response, and error handling before adapting it.
 
-| Example | Best for | Run it |
-| --- | --- | --- |
-| [TypeScript quickstart](./typescript/quickstart) | Your first server-side calculation | `npm run start -w typescript/quickstart` |
-| [Python quickstart](./python/quickstart) | A small script or Python service | `python python/quickstart/quickstart.py` |
-| [Stripe custom checkout](./stripe-custom-checkout) | Stripe Payment Element with tax calculated before payment | `npm run dev -w stripe-custom-checkout` |
-| [PayPal Orders](./paypal-orders) | PayPal JavaScript SDK v6 with server-side order creation | `npm run dev -w paypal-orders` |
-| [Postman collection](./postman) | Exploring the complete v1 resource lifecycle | Import the collection and environment |
+## Quick start
 
-These are examples, not SDKs. Each project keeps the HTTP boundary visible so you can copy the parts your application needs without adopting a new abstraction layer.
+Start with the TypeScript example. You need
+[Node.js 20 or newer](https://nodejs.org/) and a server-side API key.
 
-## Get started
+```bash
+git clone https://github.com/InstaBlick/salestaxcalculatorapi-examples.git
+cd salestaxcalculatorapi-examples
+cp .env.example .env
+npm install
+npm run start -w typescript/quickstart
+```
 
-1. Create a server-side API key in the [developer console](https://salestaxcalculatorapi.com/login?mode=signup&redirect=%2Fdashboard%2Fapi-keys).
-2. Clone this repository and create your local environment file:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-3. Replace `stca_replace_me` with your API key.
-4. Install the JavaScript dependencies when using a Node.js example:
-
-   ```bash
-   npm install
-   ```
-
-5. Open the README inside your chosen example and run it.
+On Windows PowerShell, use `Copy-Item .env.example .env` instead of `cp`. Replace `stca_replace_me` in `.env`, then open the guide for the example you want to run.
 
 > [!IMPORTANT]
-> Keep `STCA_API_KEY`, `STRIPE_SECRET_KEY`, and `PAYPAL_CLIENT_SECRET` on your server. Never place them in browser code, mobile applications, commits, logs, or screenshots.
+> Keep API and payment-provider secret keys on your server. Never expose them in browser code, mobile applications, commits, logs, or screenshots.
 
-## The integration pattern
+## Integration rules
 
-Every example follows the same safe boundary:
+1. Your server loads trusted product prices and seller details.
+2. It creates a calculation with `POST /v1/calculations`.
+3. It checks the returned `outcome` before using any amount.
+4. Only a determinate result continues to payment; other outcomes stop for review.
 
-```mermaid
-sequenceDiagram
-  participant Browser
-  participant YourServer as Your server
-  participant TaxAPI as Sales Tax Calculator API
-  participant Payments as Payment provider
-  Browser->>YourServer: Product IDs, quantity, customer address
-  YourServer->>YourServer: Load trusted prices and seller facts
-  YourServer->>TaxAPI: POST /v1/calculations
-  TaxAPI-->>YourServer: Outcome, tax, total, calculation ID
-  alt Determinate outcome
-    YourServer->>Payments: Create payment with calculated total
-    Payments-->>Browser: Secure checkout session
-  else review_required or unsupported
-    YourServer-->>Browser: Stop checkout with a resolvable message
-  end
-```
+The browser supplies customer input, but it never decides the price or tax. Keep
+these API details intact when you adapt an example:
 
-The browser never decides the price or tax. Your server owns the catalog, sends the calculation, checks its outcome, and only then creates the payment.
-
-## Contract essentials
-
-- Send money and quantity as decimal strings such as `"100.00"` and `"1"`.
+- Send money and quantities as decimal strings, such as `"100.00"` and `"1"`.
 - Authenticate with `Authorization: Bearer stca_...` from a trusted server.
 - Add a unique `Idempotency-Key` to every create request.
-- Treat HTTP `201` as a created calculation, then branch on `outcome` before using amounts.
-- Stop automated checkout for `review_required` and `unsupported`; the API does not guess.
-- Store the calculation ID, request ID, outcome, and returned amounts with your order.
-- Retry only when the response explicitly says it is retryable, and honor `Retry-After`.
+- Stop automated checkout for `review_required` and `unsupported` outcomes.
+- Store the calculation ID, request ID, outcome, and returned amounts with the order.
+- Retry only when the response says it is retryable, and honor `Retry-After`.
 
-Read the [integration guide](https://salestaxcalculatorapi.com/docs) or browse the [OpenAPI reference](https://salestaxcalculatorapi.com/openapi.json) for the complete contract.
-
-## Repository map
-
-```text
-salestaxcalculatorapi-examples/
-├── typescript/quickstart       # Native fetch, typed response handling
-├── python/quickstart           # Requests-based calculation
-├── stripe-custom-checkout      # Payment Element + Payment Intents
-├── paypal-orders               # JavaScript SDK v6 + Orders v2
-├── postman                     # Collection and safe local environment
-├── .env.example                # Placeholder credentials only
-└── .github/workflows/ci.yml    # Type, syntax, test, and secret checks
-```
+See the [integration guide](https://salestaxcalculatorapi.com/docs) for the full request and response contract.
 
 ## Before production
 
-- Replace the demo catalog and seller registration with records from your own system.
-- Validate product IDs, quantities, addresses, currencies, and authenticated customer ownership server-side.
-- Persist the payment-to-calculation mapping in your database; the payment examples use memory only for a short local demo.
-- Finalize successful calculations as transactions when your order becomes immutable.
-- Add provider webhooks and verify every signature before fulfilling an order.
-- Use your own HTTPS domain, structured logging, rate-limit handling, monitoring, and customer-safe error messages.
-- Test determinate, `review_required`, `unsupported`, declined-payment, duplicate-request, and timeout paths.
+- Replace the demo catalog and seller registration with records from your system.
+- Persist the payment-to-calculation mapping; payment examples use memory for local development only.
+- Add signed payment webhooks before fulfilling orders.
+- Test determinate, review, unsupported, declined-payment, duplicate-request, and timeout paths.
 
-## Open-source boundary
+## Project scope
 
-This repository contains integration examples only. The calculation engine, tax data, qualification logic, operational infrastructure, and private release packages are not included. Opening the examples makes implementation easier without turning private tax logic into a client-side dependency.
+This public repository contains integration examples only. The calculation engine
+and tax data are not included.
 
-## Contributing and security
+## Support and contributions
 
-Small, focused improvements are welcome. Read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening a pull request. Please report security issues privately using the process in [SECURITY.md](./SECURITY.md).
+If an example fails or its instructions are unclear,
+[open an issue](https://github.com/InstaBlick/salestaxcalculatorapi-examples/issues).
+For code changes, read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening a pull
+request.
+
+Please report vulnerabilities privately using the process in [SECURITY.md](./SECURITY.md).
 
 ## License
 
-The example code is available under the [MIT License](./LICENSE). Your use of the hosted API remains subject to the [Sales Tax Calculator API terms](https://salestaxcalculatorapi.com/terms).
+Example code is available under the [MIT License](./LICENSE). Use of the hosted API remains subject to the [Sales Tax Calculator API terms](https://salestaxcalculatorapi.com/terms).
