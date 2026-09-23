@@ -1,6 +1,6 @@
 # Python quickstart
 
-Send one server-side sales tax calculation with `requests` and explicit outcome handling.
+Send one server-side sales tax calculation with the official [`salestax-python`](https://github.com/InstaBlick-USA/salestax-python) SDK and explicit outcome handling.
 
 ## Run it
 

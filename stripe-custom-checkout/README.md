@@ -18,7 +18,7 @@ The sample accepts Stripe test keys only, preventing an accidental live charge w
 Add sandbox credentials to the root `.env`:
 
 ```dotenv
-STCA_API_KEY=stca_replace_me
+SALESTAX_API_KEY=stca_replace_me
 STRIPE_PUBLISHABLE_KEY=pk_test_replace_me
 STRIPE_SECRET_KEY=sk_test_replace_me
 ```

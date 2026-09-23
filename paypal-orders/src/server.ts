@@ -9,7 +9,7 @@ const exampleRoot = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 const repositoryRoot = resolve(exampleRoot, "..");
 config({ path: resolve(repositoryRoot, ".env"), quiet: true });
 
-const requiredEnvironment = ["STCA_API_KEY", "PAYPAL_CLIENT_ID", "PAYPAL_CLIENT_SECRET"] as const;
+const requiredEnvironment = ["SALESTAX_API_KEY", "PAYPAL_CLIENT_ID", "PAYPAL_CLIENT_SECRET"] as const;
 for (const name of requiredEnvironment) {
   const value = process.env[name];
   if (!value || value === "replace_me" || value.endsWith("replace_me")) {
@@ -32,7 +32,7 @@ const CATALOG = {
 } as const;
 
 const paypalBaseUrl = "https://api-m.sandbox.paypal.com";
-const apiKey = process.env.STCA_API_KEY as string;
+const apiKey = process.env.SALESTAX_API_KEY as string;
 const paypalClientId = process.env.PAYPAL_CLIENT_ID as string;
 const paypalClientSecret = process.env.PAYPAL_CLIENT_SECRET as string;
 const taxBaseUrl = (process.env.STCA_API_BASE_URL ?? "https://api.salestaxcalculatorapi.com").replace(/\/+$/, "");
