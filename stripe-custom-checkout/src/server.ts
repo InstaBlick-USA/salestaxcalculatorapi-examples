@@ -10,7 +10,7 @@ const exampleRoot = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
 const repositoryRoot = resolve(exampleRoot, "..");
 config({ path: resolve(repositoryRoot, ".env"), quiet: true });
 
-const requiredEnvironment = ["STCA_API_KEY", "STRIPE_PUBLISHABLE_KEY", "STRIPE_SECRET_KEY"] as const;
+const requiredEnvironment = ["SALESTAX_API_KEY", "STRIPE_PUBLISHABLE_KEY", "STRIPE_SECRET_KEY"] as const;
 for (const name of requiredEnvironment) {
   const value = process.env[name];
   if (!value || value.endsWith("replace_me")) {
@@ -29,7 +29,7 @@ const CATALOG = {
   },
 } as const;
 
-const apiKey = process.env.STCA_API_KEY as string;
+const apiKey = process.env.SALESTAX_API_KEY as string;
 const publishableKey = process.env.STRIPE_PUBLISHABLE_KEY as string;
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const taxBaseUrl = (process.env.STCA_API_BASE_URL ?? "https://api.salestaxcalculatorapi.com").replace(/\/+$/, "");

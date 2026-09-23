@@ -18,7 +18,7 @@ The sample is locked to PayPal sandbox, preventing an accidental live capture wh
 Create a PayPal sandbox app, then add these values to the root `.env`:
 
 ```dotenv
-STCA_API_KEY=stca_replace_me
+SALESTAX_API_KEY=stca_replace_me
 PAYPAL_CLIENT_ID=replace_me
 PAYPAL_CLIENT_SECRET=replace_me
 PAYPAL_ENVIRONMENT=sandbox

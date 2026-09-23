@@ -8,7 +8,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "dotenv": "^17.2.2"
+    "dotenv": "^17.2.2",
+    "salestax-node": "^0.2.1"
   },
   "devDependencies": {
     "@types/node": "^24.3.0",

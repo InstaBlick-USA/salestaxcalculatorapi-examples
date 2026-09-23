@@ -21,14 +21,13 @@
 
 | Example | What it demonstrates |
 | --- | --- |
-| [TypeScript quickstart](./typescript/quickstart) | Create a calculation with native `fetch` and handle each outcome |
-| [Python quickstart](./python/quickstart) | Call the API from a small Python application |
+| [TypeScript quickstart](./typescript/quickstart) | Create a sales tax calculation with the official Node.js SDK |
+| [Python quickstart](./python/quickstart) | Create a sales tax calculation with the official Python SDK |
 | [Stripe custom checkout](./stripe-custom-checkout) | Calculate tax before creating a Stripe Payment Intent |
 | [PayPal Orders](./paypal-orders) | Calculate tax before creating a PayPal order |
 | [Postman collection](./postman) | Explore the complete v1 resource lifecycle without writing code |
 
-This repository does not add another SDK. Each example calls the API directly, so
-you can inspect the request, response, and error handling before adapting it.
+The TypeScript and Python quickstarts use the official SDKs. The Stripe and PayPal examples call the tax API directly so their payment boundaries, request handling, and fail-closed outcome branches remain visible.
 
 ## Quick start
 
@@ -36,7 +35,7 @@ Start with the TypeScript example. You need
 [Node.js 20 or newer](https://nodejs.org/) and a server-side API key.
 
 ```bash
-git clone https://github.com/InstaBlick/salestaxcalculatorapi-examples.git
+git clone https://github.com/InstaBlick-USA/salestaxcalculatorapi-examples.git
 cd salestaxcalculatorapi-examples
 cp .env.example .env
 npm install
@@ -82,7 +81,7 @@ and tax data are not included.
 ## Support and contributions
 
 If an example fails or its instructions are unclear,
-[open an issue](https://github.com/InstaBlick/salestaxcalculatorapi-examples/issues).
+[open an issue](https://github.com/InstaBlick-USA/salestaxcalculatorapi-examples/issues).
 For code changes, read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening a pull
 request.
 
